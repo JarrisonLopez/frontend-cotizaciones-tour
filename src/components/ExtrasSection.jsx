@@ -1,14 +1,25 @@
 import React from "react";
 
+import { UsersRound } from "lucide-react";
 import Panel from "./Panel";
 
-export default function ExtrasSection({ form, updateField }) {
+export default function ExtrasSection({
+  form,
+  updateField,
+  puedeIncluirStaff,
+  totalPax,
+}) {
   return (
-    <Panel title="Varios">
-      <label className="check-row">
+    <Panel title="Varios" icon={<UsersRound size={20} />}>
+      <label
+        className={
+          puedeIncluirStaff ? "check-row" : "check-row disabled-row"
+        }
+      >
         <input
           type="checkbox"
           checked={form.incluirTourLider}
+          disabled={!puedeIncluirStaff}
           onChange={(e) =>
             updateField("incluirTourLider", e.target.checked)
           }
@@ -17,29 +28,32 @@ export default function ExtrasSection({ form, updateField }) {
         Incluir tour líder
       </label>
 
-      <label className="check-row">
+      <label
+        className={
+          puedeIncluirStaff ? "check-row" : "check-row disabled-row"
+        }
+      >
         <input
           type="checkbox"
-          checked={form.incluirHonorariosStaff}
+          checked={form.incluirStaff}
+          disabled={!puedeIncluirStaff}
           onChange={(e) =>
-            updateField("incluirHonorariosStaff", e.target.checked)
+            updateField("incluirStaff", e.target.checked)
           }
         />
 
-        Incluir honorarios staff
+        Incluir staff completo
+        <small className="help-text">
+          Tiquetes staff + comida staff + honorarios staff
+        </small>
       </label>
 
-      <label className="check-row">
-        <input
-          type="checkbox"
-          checked={form.incluirComision}
-          onChange={(e) =>
-            updateField("incluirComision", e.target.checked)
-          }
-        />
-
-        Incluir comisión de venta 2%
-      </label>
+      {!puedeIncluirStaff && (
+        <p className="warning-text">
+          Para grupos menores a 4 personas no se puede incluir tour líder ni
+          staff. Grupo actual: {totalPax} pax.
+        </p>
+      )}
     </Panel>
   );
 }

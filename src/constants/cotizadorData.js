@@ -8,8 +8,6 @@ const hospedajes = [
 ];
 
 const transportes = [
-  { key: "tiquetesStaff", label: "Tiquetes staff" },
-  { key: "comida", label: "Comida staff" },
   { key: "taxisAeropuerto", label: "Taxis aeropuerto" },
   { key: "camioneta4x4", label: "Camionetas 4x4" },
 ];
@@ -69,16 +67,15 @@ const initialForm = {
   ninos: 0,
   dias: 3,
 
+  moneda: "COP",
+
   hospedajeAdulto: "doble",
   hospedajeNino: "doble",
 
   incluirAlimentacion: true,
 
-  margen: 0.35,
-
   incluirTourLider: false,
-  incluirHonorariosStaff: false,
-  incluirComision: true,
+  incluirStaff: false,
 
   transporte: emptyFlags(transportes),
   actividades: emptyFlags(actividades),

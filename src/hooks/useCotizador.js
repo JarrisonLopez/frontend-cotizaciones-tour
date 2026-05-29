@@ -19,11 +19,31 @@ export function useCotizador() {
     return Math.max(Number(form.dias || 0) - 1, 0);
   }, [form.dias]);
 
+  const totalPax = useMemo(() => {
+    return Number(form.adultos || 0) + Number(form.ninos || 0);
+  }, [form.adultos, form.ninos]);
+
+  const puedeIncluirStaff = useMemo(() => {
+    return totalPax >= 4;
+  }, [totalPax]);
+
   function updateField(name, value) {
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => {
+      const updated = {
+        ...prev,
+        [name]: value,
+      };
+
+      const nuevoTotalPax =
+        Number(updated.adultos || 0) + Number(updated.ninos || 0);
+
+      if (nuevoTotalPax < 4) {
+        updated.incluirTourLider = false;
+        updated.incluirStaff = false;
+      }
+
+      return updated;
+    });
   }
 
   function updateNested(group, key, checked) {
@@ -62,7 +82,13 @@ export function useCotizador() {
     setResultado(null);
 
     try {
-      const data = await cotizarTour(form);
+      const payload = {
+        ...form,
+        margen: 0.25,
+        incluirComision: true,
+      };
+
+      const data = await cotizarTour(payload);
       setResultado(data);
     } catch (err) {
       setError(err.message || "Error conectando con el backend");
@@ -76,7 +102,13 @@ export function useCotizador() {
     setError("");
 
     try {
-      const blob = await descargarCotizacionPDF(form);
+      const payload = {
+        ...form,
+        margen: 0.25,
+        incluirComision: true,
+      };
+
+      const blob = await descargarCotizacionPDF(payload);
       const url = window.URL.createObjectURL(blob);
 
       const a = document.createElement("a");
@@ -100,6 +132,8 @@ export function useCotizador() {
     loading,
     error,
     noches,
+    totalPax,
+    puedeIncluirStaff,
     updateField,
     updateNested,
     aplicarPaquete,

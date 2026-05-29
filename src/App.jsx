@@ -62,6 +62,8 @@ export default function App() {
           <ExtrasSection
             form={cotizador.form}
             updateField={cotizador.updateField}
+            puedeIncluirStaff={cotizador.puedeIncluirStaff}
+            totalPax={cotizador.totalPax}
           />
 
           <ActionButtons

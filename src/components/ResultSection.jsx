@@ -8,6 +8,36 @@ import {
 import { currency } from "../utils/currency";
 
 export default function ResultSection({ resultado }) {
+  const moneda = resultado.input?.moneda || "COP";
+
+  const totals =
+    moneda === "USD"
+      ? resultado.totalsUSD
+      : resultado.totals;
+
+  const formatter = new Intl.NumberFormat(
+    moneda === "USD" ? "en-US" : "es-CO",
+    {
+      style: "currency",
+      currency: moneda,
+      maximumFractionDigits: 0,
+    }
+  );
+
+  function formatMoney(value) {
+    return formatter.format(Number(value || 0));
+  }
+
+  function convertDetailValue(value) {
+    if (moneda === "COP") return value;
+
+    const rate = resultado.exchange?.rate || 0;
+
+    if (!rate) return value;
+
+    return Number(value || 0) / rate;
+  }
+
   return (
     <section className="resultado">
       <div className="result-header">
@@ -33,7 +63,7 @@ export default function ResultSection({ resultado }) {
           <span>Costo total</span>
 
           <strong>
-            {currency.format(resultado.totals?.costoTotal || 0)}
+            {formatMoney(totals?.costoTotal)}
           </strong>
         </div>
 
@@ -41,9 +71,7 @@ export default function ResultSection({ resultado }) {
           <span>Precio venta total</span>
 
           <strong>
-            {currency.format(
-              resultado.totals?.precioVentaTotal || 0
-            )}
+            {formatMoney(totals?.precioVentaTotal)}
           </strong>
         </div>
 
@@ -51,9 +79,7 @@ export default function ResultSection({ resultado }) {
           <span>Precio por persona</span>
 
           <strong>
-            {currency.format(
-              resultado.totals?.precioVentaPersona || 0
-            )}
+            {formatMoney(totals?.precioVentaPersona)}
           </strong>
         </div>
 
@@ -71,15 +97,7 @@ export default function ResultSection({ resultado }) {
           <span>Subtotal</span>
 
           <strong>
-            {currency.format(resultado.totals?.subtotal || 0)}
-          </strong>
-        </div>
-
-        <div className="summary-card">
-          <span>Comisión</span>
-
-          <strong>
-            {currency.format(resultado.totals?.comision || 0)}
+            {formatMoney(totals?.subtotal)}
           </strong>
         </div>
 
@@ -87,9 +105,7 @@ export default function ResultSection({ resultado }) {
           <span>Costos variables</span>
 
           <strong>
-            {currency.format(
-              resultado.totals?.costosVariables || 0
-            )}
+            {formatMoney(totals?.costosVariables)}
           </strong>
         </div>
 
@@ -97,9 +113,7 @@ export default function ResultSection({ resultado }) {
           <span>Costos fijos</span>
 
           <strong>
-            {currency.format(
-              resultado.totals?.costosFijos || 0
-            )}
+            {formatMoney(totals?.costosFijos)}
           </strong>
         </div>
 
@@ -107,9 +121,7 @@ export default function ResultSection({ resultado }) {
           <span>Utilidad operativa</span>
 
           <strong>
-            {currency.format(
-              resultado.totals?.utilidadOperativa || 0
-            )}
+            {formatMoney(totals?.utilidadOperativa)}
           </strong>
         </div>
 
@@ -117,9 +129,7 @@ export default function ResultSection({ resultado }) {
           <span>MC Unitario</span>
 
           <strong>
-            {currency.format(
-              resultado.totals?.margenContribucionUnitario || 0
-            )}
+            {formatMoney(totals?.margenContribucionUnitario)}
           </strong>
         </div>
       </div>
@@ -129,9 +139,25 @@ export default function ResultSection({ resultado }) {
           {resultado.messages?.viabilidad}
         </p>
 
-        <p className="note">
-          {resultado.messages?.margen}
-        </p>
+        {resultado.messages?.reglaStaff && (
+          <p className="note">
+            {resultado.messages.reglaStaff}
+          </p>
+        )}
+
+        {resultado.exchange && (
+          <p className="note">
+            Moneda seleccionada: {moneda}.{" "}
+            Tasa utilizada: 1 USD ={" "}
+            {currency.format(resultado.exchange.rate)} COP.
+          </p>
+        )}
+
+        {resultado.exchange?.warning && (
+          <p className="note">
+            {resultado.exchange.warning}
+          </p>
+        )}
       </div>
 
       {Array.isArray(resultado.detail) &&
@@ -156,13 +182,13 @@ export default function ResultSection({ resultado }) {
                     <td>{item.item}</td>
 
                     <td>
-                      {currency.format(item.unitPrice || 0)}
+                      {formatMoney(convertDetailValue(item.unitPrice))}
                     </td>
 
                     <td>{item.quantity ?? "-"}</td>
 
                     <td>
-                      {currency.format(item.total || 0)}
+                      {formatMoney(convertDetailValue(item.total))}
                     </td>
                   </tr>
                 ))}

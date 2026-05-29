@@ -38,18 +38,17 @@ export default function BasicDataForm({ form, updateField }) {
         </label>
 
         <label>
-          Margen objetivo
+          Moneda
           <select
-            value={form.margen}
-            onChange={(e) => updateField("margen", Number(e.target.value))}
+            value={form.moneda}
+            onChange={(e) => updateField("moneda", e.target.value)}
           >
-            <option value={0.25}>25%</option>
-            <option value={0.3}>30%</option>
-            <option value={0.35}>35%</option>
-            <option value={0.4}>40%</option>
-            <option value={0.45}>45%</option>
+            <option value="COP">Pesos colombianos (COP)</option>
+            <option value="USD">Dólares americanos (USD)</option>
           </select>
         </label>
+
+
       </div>
     </Panel>
   );

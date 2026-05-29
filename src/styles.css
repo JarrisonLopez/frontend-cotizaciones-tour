@@ -807,3 +807,52 @@ th {
     width: 100%;
   }
 }
+
+.disabled-row {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.disabled-row input {
+  cursor: not-allowed;
+}
+
+.help-text {
+  display: block;
+  margin-left: 8px;
+  font-size: 12px;
+  color: #64746a;
+  font-weight: 500;
+}
+
+.auto-info {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #eef6ef;
+  border: 1px solid #d9eadb;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #20402a;
+}
+
+.auto-info strong {
+  font-size: 14px;
+}
+
+.auto-info span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.warning-text {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff4e6;
+  border: 1px solid #ffd8a8;
+  color: #9a4f00;
+  font-weight: 600;
+  font-size: 14px;
+}
